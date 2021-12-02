@@ -4,14 +4,20 @@ import random
 import numpy as np
 from bandit import *
 
-
 class Agent(object):
 
     def __init__(self, bandits : list[Bandit]):
         self.bandits = bandits
+        self.bestcount = 0
         """
         initializes every agent with a list of bandits
         """
+    def update_best_count(self, reward):
+        self.bestcount += 1
+        for rew in [self.bandits[i].get_reward() for i in range(self.k)]:
+            if rew > reward:
+                self.bestcount -= 1
+                break
 
 class RandomAgent(Agent):
 
@@ -38,6 +44,7 @@ class RandomAgent(Agent):
 class EpsylonGreedyAgent(Agent):
 
     def __init__(self, k, eps, iters):
+        super(EpsylonGreedyAgent, self).__init__([Bandit(random.randint(0,100)) for k in range(k)])
         # Number of arms
         self.k = k
         # Epsilon
@@ -74,7 +81,8 @@ class EpsylonGreedyAgent(Agent):
             a = np.argmax(self.k_reward)
 
         # Draw a reward from Gaussian distribution randomly with a random mu, dont know if that correct tho
-        reward = np.random.normal(self.mu[a], 1) # Not using the function from bandit at the moment
+        reward = self.bandits[a].get_reward()
+        self.update_best_count(reward)
 
         # Update counts
         self.n += 1
@@ -94,6 +102,7 @@ class EpsylonGreedyAgent(Agent):
 
 class GreedyAgent(Agent):
     def __init__(self, k, iters):
+        super(GreedyAgent, self).__init__([Bandit(random.randint(0,100)) for k in range(k)])
         # Number of arms
         self.k = k
         # Number of iterations
@@ -115,7 +124,9 @@ class GreedyAgent(Agent):
     def pull(self):
         a = np.argmax(self.k_reward)
         # Draw a reward from Gaussian distribution randomly with a random mu, dont know if that correct tho
-        reward = np.random.normal(self.mu[a], 1) # Not using the function from bandit at the moment
+        # reward = np.random.normal(self.mu[a], 1) # Not using the function from bandit at the moment
+        reward = self.bandits[a].get_reward()
+        self.update_best_count(reward)
 
         # Update counts
         self.n += 1

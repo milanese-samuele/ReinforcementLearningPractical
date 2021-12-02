@@ -17,8 +17,8 @@ epsilon = 0.1
 def plotResults(eps_rewards, Greed_rewards):
     plt.figure(figsize=(11,9))
     plt.plot(eps_rewards, color="green", label="$\epsilon$ Greedy")
-    plt.plot(Greed_rewards, color="red", label="$\epsilon$")
-    plt.legend(bbox_to_anchor=(1.4, 0.6))
+    plt.plot(Greed_rewards, color="red", label="greedy")
+    plt.legend()
     plt.xlabel("Iterations")
     plt.ylabel("Average Reward")
     plt.title("Rewards after " + str(N)
@@ -46,6 +46,8 @@ def main():
         eps_rewards = eps_rewards + (eps.reward - eps_rewards) / (idx + 1)
     # Plot the results
     plotResults(eps_rewards, Greed_rewards)
+    print("greed best actions: ", greed.bestcount)
+    print("epsilongreed best actions: ", eps.bestcount)
 
 
 if __name__ == '__main__':
