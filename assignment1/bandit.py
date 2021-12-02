@@ -10,10 +10,11 @@ SIGMA = 2.0
 
 class Bandit(object):
 
-    def __init__(self, seed):
+    def __init__(self, idx):
         self.mu = np.random.normal(0,1)
         self.sigma = SIGMA
-        self.generator = random.Random(seed)
+        self.idx = idx
+        self.generator = random.Random()
         self.p = 0.5
         """
         Constructor which instantiates a unique generator that does not

@@ -12,12 +12,9 @@ class Agent(object):
         """
         initializes every agent with a list of bandits
         """
-    def update_best_count(self, reward):
-        self.bestcount += 1
-        for rew in [self.bandits[i].get_reward() for i in range(self.k)]:
-            if rew > reward:
-                self.bestcount -= 1
-                break
+    def update_best_count(self, idx, best):
+        if(idx == best):
+            self.bestcount += 1
 
 class RandomAgent(Agent):
 
@@ -64,6 +61,39 @@ class EpsylonGreedyAgent(Agent):
         self.mu = np.random.normal(0, 1, k)
         # Random sd generated not sure if that is correct tho
         self.sd = np.random.normal(0, 2, k)
+
+    def choose_bandit(self):
+        # Random number to decide whether to exploit or explore
+        p = np.random.rand()
+        # Explore in the first run
+        if self.eps == 0 and self.n == 0:
+            a = np.random.choice(self.k)
+        # Explore
+        elif p < self.eps:
+            # Randomly select an action
+            a = np.random.choice(self.k)
+        # Exploit with the largest reward until t
+        else:
+            # Take greedy action
+            a = np.argmax(self.k_reward)
+        return a
+    """
+    Chooses a bandit from the input list and returns the index of
+    the chosen bandit
+    """
+
+    def update_results(self, idx, reward):
+        # Update counts
+        self.n += 1
+        self.k_n[idx] += 1
+        # Update total reward
+        self.mean_reward = self.mean_reward + (reward - self.mean_reward) / self.n
+
+        # Update results for mean reward at the a_th k arm
+        self.k_reward[idx] = self.k_reward[idx] + (reward - self.k_reward[idx]) / self.k_n[idx]
+
+    def update_step(self, step):
+        self.reward[step] = self.mean_reward
 
     def pull(self):
         # Random number to decide whether to exploit or explore
