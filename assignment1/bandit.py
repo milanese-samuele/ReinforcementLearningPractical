@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import random
+from scipy.stats import bernoulli
+import numpy as np
 
 ## Distributions charachteristics
 MU = 0.0
@@ -12,6 +14,7 @@ class Bandit(object):
         self.mu = MU
         self.sigma = SIGMA
         self.generator = random.Random(seed)
+        self.p = 0.5
         """
         Constructor which instantiates a unique generator that does not
         share state with other random generators in the program
@@ -22,3 +25,9 @@ class Bandit(object):
         """
         Returns the reward by sampling the distribution
         """
+
+    def get_reward_bernoulli(self) -> float:
+        return bernoulli.rvs(self.p)
+    """
+    Random reward with bernoulli
+    """
