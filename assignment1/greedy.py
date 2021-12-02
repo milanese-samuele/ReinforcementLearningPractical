@@ -5,6 +5,7 @@ import numpy as np
 class Greedy(object):
 
     def __init__(self, k, iters):
+        self.label = "Greedy"
         # Number of arms
         self.k = k
         # Number of iterations
@@ -49,6 +50,7 @@ class EpsilonGreedy(Greedy):
 
     def __init__(self, k, epsilon, iters):
         super(EpsilonGreedy, self).__init__(k, iters)
+        self.label = "$\epsilon$ Greedy"
         self.eps = epsilon
 
     def reset(self):

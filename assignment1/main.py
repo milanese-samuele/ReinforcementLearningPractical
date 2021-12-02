@@ -17,13 +17,13 @@ SEED = 42
 alpha = 0.01
 epsilon = 0.1
 
-algorithms = [ Greedy(K, N),
+ALGOS = [ Greedy(K, N),
                EpsilonGreedy(K, epsilon, N)]
 
-def plotResults(eps_rewards, Greed_rewards):
+def plotResults(results):
     plt.figure(figsize=(11,9))
-    plt.plot(eps_rewards, color="green", label="$\epsilon$ Greedy")
-    plt.plot(Greed_rewards, color="red", label="greedy")
+    for i, p in enumerate(results):
+        plt.plot(p, label=ALGOS[i].label)
     plt.legend()
     plt.xlabel("Iterations")
     plt.ylabel("Average Reward")
@@ -53,24 +53,27 @@ def main():
     # Plot the results
     plotResults(eps_rewards, Greed_rewards)
 
+def run_models(bandits, algorithms):
+    for i in range(N):
+        rewards = [bandits[idx].get_reward() for idx in range(K)]
+        best_bidx = np.argmax(rewards)
+        for alg in algorithms:
+            choice = alg.choose_bandit()
+            alg.update_best_count(choice, best_bidx)
+            alg.update_results(choice, rewards[choice])
+            alg.update_step(i)
+
 def altmain():
     bandits = [Bandit(idx) for idx in range(K)]
+    algorithms = ALGOS
     reward_records = [np.zeros(N) for _ in range(len(algorithms))]
     for step in range(N):
         for alg in algorithms:
             alg.reset()
-        for i in range(N):
-            rewards = [bandits[idx].get_reward() for idx in range(K)]
-            best_bidx = np.argmax(rewards)
-            for alg in algorithms:
-                choice = alg.choose_bandit()
-                alg.update_best_count(choice, best_bidx)
-                alg.update_results(choice, rewards[choice])
-                alg.update_step(i)
-
+        run_models(bandits, algorithms)
         for idx, _ in enumerate(algorithms):
             reward_records[idx] = reward_records[idx] + (algorithms[idx].reward - reward_records[idx]) / (step + 1)
-    plotResults(reward_records[1], reward_records[0])
+    plotResults(reward_records)
 
 
 
