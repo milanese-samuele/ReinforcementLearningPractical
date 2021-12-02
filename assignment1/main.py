@@ -2,21 +2,23 @@
 
 from bandit import *
 from agent import *
+from greedy import *
 import random
 import matplotlib.pyplot as plt
 import numpy as np
 
 
 ## PARAMETERs FOR EXPERIMENT
-N = 500
-K = 4
+N = 1000
+K = 15
 
 SEED = 42
 
 alpha = 0.01
 epsilon = 0.1
 
-algorithms = [ EpsylonGreedyAgent(K, epsilon, N) ]
+algorithms = [ Greedy(K, N),
+               EpsilonGreedy(K, epsilon, N)]
 
 def plotResults(eps_rewards, Greed_rewards):
     plt.figure(figsize=(11,9))
@@ -53,10 +55,12 @@ def main():
 
 def altmain():
     bandits = [Bandit(idx) for idx in range(K)]
-    eps_rewards = np.zeros(N)
+    reward_records = [np.zeros(N) for _ in range(len(algorithms))]
     for step in range(N):
+        for alg in algorithms:
+            alg.reset()
         for i in range(N):
-            rewards = np.array([bandits[idx].get_reward() for idx in range(K)])
+            rewards = [bandits[idx].get_reward() for idx in range(K)]
             best_bidx = np.argmax(rewards)
             for alg in algorithms:
                 choice = alg.choose_bandit()
@@ -64,19 +68,9 @@ def altmain():
                 alg.update_results(choice, rewards[choice])
                 alg.update_step(i)
 
-        eps_rewards = eps_rewards + (algorithms[0].reward - eps_rewards) / (step + 1)
-    print("{}/{} = {}%".format(algorithms[0].bestcount,
-                               N*N,
-                              (algorithms[0].bestcount*100)/(N*N)))
-    plt.figure(figsize=(11,9))
-    plt.plot(eps_rewards, color="green", label="$\epsilon$ Greedy")
-    plt.legend()
-    plt.xlabel("Iterations")
-    plt.ylabel("Average Reward")
-    plt.title("Rewards after " + str(N)
-              + " iterations")
-    plt.show()
-
+        for idx, _ in enumerate(algorithms):
+            reward_records[idx] = reward_records[idx] + (algorithms[idx].reward - reward_records[idx]) / (step + 1)
+    plotResults(reward_records[1], reward_records[0])
 
 
 

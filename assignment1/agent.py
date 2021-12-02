@@ -112,7 +112,6 @@ class EpsylonGreedyAgent(Agent):
 
         # Draw a reward from Gaussian distribution randomly with a random mu, dont know if that correct tho
         reward = self.bandits[a].get_reward()
-        self.update_best_count(reward)
 
         # Update counts
         self.n += 1
@@ -123,6 +122,9 @@ class EpsylonGreedyAgent(Agent):
 
         # Update results for mean reward at the a_th k arm
         self.k_reward[a] = self.k_reward[a] + (reward - self.k_reward[a]) / self.k_n[a]
+
+    def reset(self):
+        self.__init__(self.k, self.eps, self.iters)
 
     # Run the modell
     def run(self):
@@ -151,12 +153,28 @@ class GreedyAgent(Agent):
         # Random sd generated not sure if that is correct tho
         self.sd = np.random.normal(0, 2, k)
 
+    def choose_bandit(self):
+        return np.argmax(self.k_reward)
+
+    def update_results(self, idx, reward):
+        # Update counts
+        self.n += 1
+        self.k_n[idx] += 1
+
+        # Update total reward
+        self.mean_reward = self.mean_reward + (reward - self.mean_reward) / self.n
+
+        # Update results for mean reward at the a_th k arm
+        self.k_reward[idx] = self.k_reward[idx] + (reward - self.k_reward[idx]) / self.k_n[idx]
+
+    def update_step(self, idx):
+        self.reward[idx] = self.mean_reward
+
     def pull(self):
         a = np.argmax(self.k_reward)
         # Draw a reward from Gaussian distribution randomly with a random mu, dont know if that correct tho
         # reward = np.random.normal(self.mu[a], 1) # Not using the function from bandit at the moment
         reward = self.bandits[a].get_reward()
-        self.update_best_count(reward)
 
         # Update counts
         self.n += 1
@@ -167,6 +185,9 @@ class GreedyAgent(Agent):
 
         # Update results for mean reward at the a_th k arm
         self.k_reward[a] = self.k_reward[a] + (reward - self.k_reward[a]) / self.k_n[a]
+
+    def reset(self):
+        self.__init__(self.k, self.iters)
 
     # Run the modell
     def run(self):
