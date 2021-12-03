@@ -75,3 +75,19 @@ class EpsilonGreedy(Greedy):
     Chooses a bandit from the input list and returns the index of
     the chosen bandit
     """
+
+
+
+class Optimistic(Greedy):
+    '''
+    Implementation of Optimistic inital values using a greedy
+    strategy
+    '''
+    def __init__(self, k, Q, iters):
+        super(Optimistic, self).__init__(k, iters)
+        self.Q = Q
+        self.k_reward = [Q for _ in range(k)]
+        self.label = "Optimistic greedy"
+
+    def reset(self):
+        self.__init__(self.k, self.Q, self.iters)

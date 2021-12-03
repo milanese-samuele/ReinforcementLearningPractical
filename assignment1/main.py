@@ -17,9 +17,14 @@ SEED = 42
 
 epsilon = 0.1
 tau = 0.1
+Qa = 5.0
 
-ALGOS = [ Greedy(K, N),
-               EpsilonGreedy(K, epsilon, N), Softmax(K, tau, N)]
+ALGOS = [
+          Greedy(K, N),
+          EpsilonGreedy(K, epsilon, N),
+          Softmax(K, tau, N),
+          Optimistic(K, Qa, N)
+         ]
 
 def plotResults(results):
     plt.figure(figsize=(11,9))
