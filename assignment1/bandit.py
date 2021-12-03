@@ -29,7 +29,7 @@ class Bandit(object):
         """
 
     def get_reward_bernoulli(self) -> float:
-        return bernoulli.rvs(self.p)
+        return np.random.binomial(1, self.p, size=1)[0]
     """
     Random reward with bernoulli
     """

@@ -64,7 +64,7 @@ def main():
 
 def run_models(bandits, algorithms):
     for i in range(N):
-        rewards = [bandits[idx].get_reward() for idx in range(K)]
+        rewards = [bandits[idx].get_reward_bernoulli() for idx in range(K)]
         best_bidx = np.argmax(rewards)
         for alg in algorithms:
             choice = alg.choose_bandit()
