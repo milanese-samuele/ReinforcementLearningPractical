@@ -7,6 +7,7 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 from SoftMax import *
+from UCB import *
 
 
 ## PARAMETERs FOR EXPERIMENT
@@ -19,7 +20,7 @@ epsilon = 0.1
 tau = 0.1
 
 ALGOS = [ Greedy(K, N),
-               EpsilonGreedy(K, epsilon, N), Softmax(K, tau, N)]
+               EpsilonGreedy(K, epsilon, N), Softmax(K, tau, N), UCB(K, N)]
 
 def plotResults(results):
     plt.figure(figsize=(11,9))
