@@ -6,6 +6,7 @@ from greedy import *
 import random
 import matplotlib.pyplot as plt
 import numpy as np
+from SoftMax import *
 
 
 ## PARAMETERs FOR EXPERIMENT
@@ -14,11 +15,11 @@ K = 15
 
 SEED = 42
 
-alpha = 0.01
 epsilon = 0.1
+tau = 0.1
 
 ALGOS = [ Greedy(K, N),
-               EpsilonGreedy(K, epsilon, N)]
+               EpsilonGreedy(K, epsilon, N), Softmax(K, tau, N)]
 
 def plotResults(results):
     plt.figure(figsize=(11,9))
