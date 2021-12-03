@@ -3,9 +3,10 @@ import math
 
 
 class UCB():
-    def __init__(self, k, iters):
+    def __init__(self, k, c, iters):
         self.label = "UCB"
         self.k = k
+        self.c = c
         self.k_n = np.zeros(k)
         self.k_reward = np.zeros(k)
         self.bestcount = 0
@@ -16,13 +17,13 @@ class UCB():
         self.sum_reward = np.zeros(k)
         self.n = 0
 
-    def choose_bandit(self):
+    def _choose_bandit(self):
         for i in range(1, self.iters + 1):
             max_upper_bound = 0
             for idx in range(0, self.k):
                 if self.k_n[idx] > 0:
                     avg_rank = self.sum_reward[idx] / self.k_n[idx]
-                    delta_i = math.sqrt(1.5 * (math.log(i) / self.k_n[idx]))
+                    delta_i = math.sqrt(self.c * (math.log(i) / self.k_n[idx]))
                     upper_bound = avg_rank + delta_i
                 else:
                     upper_bound = 1e300
@@ -30,6 +31,19 @@ class UCB():
                     max_upper_bound = upper_bound
                     choice = idx
         return choice
+
+
+    def _compute_uncertainty(self, idx):
+        if (self.k_n[idx] > 0):
+            ret = self.k_reward[idx] + (self.c*math.sqrt(math.log(self.n)/self.k_n[idx]))
+        else:
+            ret = 1e100
+        return ret
+
+
+    def choose_bandit(self):
+        uncertain_rewards = [self._compute_uncertainty(i) for i in range(self.k)]
+        return np.argmax(uncertain_rewards)
 
     def update_results(self, idx, reward):
         self.n += 1
@@ -41,7 +55,7 @@ class UCB():
         self.k_reward[idx] = self.k_reward[idx] + (reward - self.k_reward[idx]) / self.k_n[idx]
 
     def reset(self):
-        self.__init__(self.k, self.iters)
+        self.__init__(self.k, self.c, self.iters)
 
     def update_best_count(self, idx, best):
         if(idx == best):
