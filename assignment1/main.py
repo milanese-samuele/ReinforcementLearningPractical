@@ -7,6 +7,7 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 from SoftMax import *
+from UCB import *
 
 
 ## PARAMETERs FOR EXPERIMENT
@@ -23,7 +24,8 @@ ALGOS = [
           Greedy(K, N),
           EpsilonGreedy(K, epsilon, N),
           Softmax(K, tau, N),
-          Optimistic(K, Qa, N)
+          Optimistic(K, Qa, N),
+          UCB(K, N)
          ]
 
 def plotResults(results):
