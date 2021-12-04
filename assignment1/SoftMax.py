@@ -49,11 +49,6 @@ class Softmax:
         self.mean_reward = self.mean_reward + (reward - self.mean_reward) / n
 
         # Update mean reward for the chosen arm
-        """""
-        k_reward = self.k_reward[idx]
-        new_k_reward = ((n - 1) / float(n)) * k_reward + (1 / float(n)) * reward
-        self.k_reward[idx] = new_k_reward
-        """""
         self.k_reward[idx] = self.k_reward[idx] + (reward - self.k_reward[idx]) / n
 
     def reset(self):

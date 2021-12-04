@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from SoftMax import *
 from UCB import *
+from ActionPreference import *
 
 
 ## PARAMETERs FOR EXPERIMENT
@@ -20,13 +21,15 @@ epsilon = 0.1
 tau = 0.1
 Qa = 5.0
 c = 2.0
+alpha = 0.4
 
 ALGOS = [
           Greedy(K, N),
           EpsilonGreedy(K, epsilon, N),
           Softmax(K, tau, N),
           Optimistic(K, Qa, N),
-          UCB(K, c, N)
+          UCB(K, c, N),
+          Action_Preference(K, alpha, N)
          ]
 
 def plotResults(results):
@@ -64,7 +67,7 @@ def main():
 
 def run_models(bandits, algorithms):
     for i in range(N):
-        rewards = [bandits[idx].get_reward_bernoulli() for idx in range(K)]
+        rewards = [bandits[idx].get_reward() for idx in range(K)]
         best_bidx = np.argmax(rewards)
         for alg in algorithms:
             choice = alg.choose_bandit()
