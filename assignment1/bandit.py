@@ -5,8 +5,8 @@ from scipy.stats import bernoulli
 import numpy as np
 
 ## Distributions charachteristics intervals
-MU = (1,2)
-SIGMA = (4,5)
+MU = (4, 8)
+SIGMA = (0, 1)
 
 
 class Bandit(object):
