@@ -20,14 +20,14 @@ class Greedy(object):
         # Mean reward for each arm
         self.k_reward = np.zeros(k)
         # Keeps track of how many times the optimal soulution was picked
-        self.bestcount = 0
+        self.bestcount = np.zeros(iters)
 
     def reset(self):
         self.__init__(self.k, self.iters)
 
-    def update_best_count(self, idx, best):
+    def update_best_count(self, step, idx, best):
         if(idx == best):
-            self.bestcount += 1
+            self.bestcount[step] = 1
 
     def choose_bandit(self):
         return np.argmax(self.k_reward)

@@ -11,8 +11,8 @@ SIGMA = 2.0
 class Bandit(object):
 
     def __init__(self, idx):
-        self.mu = np.random.normal(0,2)
-        self.sigma = np.random.normal(1,3)
+        self.mu = np.random.normal(1,2)
+        self.sigma = np.random.normal(4,5)
         self.idx = idx
         self.generator = random.Random()
         self.p = 0.5

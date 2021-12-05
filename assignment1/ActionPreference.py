@@ -21,7 +21,7 @@ class Action_Preference():
         self.alpha = alpha
         self.k_n = np.zeros(k)
         self.k_reward = np.zeros(k)
-        self.bestcount = 0
+        self.bestcount = np.zeros(iters)
         self.mean_reward = 0
         self.reward = np.zeros(iters)
         self.iters = iters
@@ -44,7 +44,7 @@ class Action_Preference():
         self.k_n[idx] += 1
 
         # This line below does not seem to work
-        # self.H[idx+1] = self.H[idx] + self.alpha * (reward - self.mean_reward) * (1-self.probs)
+        self.H[idx] = self.H[idx] + self.alpha * (reward - self.mean_reward) * (1-self.probs[idx])
 
         # Update total reward
         self.mean_reward = self.mean_reward + (reward - self.mean_reward) / self.n
@@ -58,9 +58,9 @@ class Action_Preference():
     def reset(self):
         self.__init__(self.k, self.alpha, self.iters)
 
-    def update_best_count(self, idx, best):
+    def update_best_count(self, step, idx, best):
         if(idx == best):
-            self.bestcount += 1
+            self.bestcount[step] = 1
 
     def update_step(self, idx):
         self.reward[idx] = self.mean_reward
