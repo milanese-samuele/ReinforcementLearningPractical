@@ -4,22 +4,26 @@ import random
 from scipy.stats import bernoulli
 import numpy as np
 
-## Distributions charachteristics
-MU = 1.0
-SIGMA = 2.0
+## Distributions charachteristics intervals
+MU = (1,2)
+SIGMA = (4,5)
+
 
 class Bandit(object):
 
     def __init__(self, idx):
-        self.mu = np.random.normal(1,2)
-        self.sigma = np.random.normal(4,5)
+        self.mu = np.random.normal(*MU)
+        self.sigma = np.random.normal(*SIGMA)
         self.idx = idx
         self.generator = random.Random()
-        self.p = 0.5
+        self.p = random.random()
         """
         Constructor which instantiates a unique generator that does not
         share state with other random generators in the program
         """
+
+    def reset(self):
+        self.__init__(self.idx)
 
     def get_reward(self) -> float :
         return self.generator.gauss(self.mu, self.sigma)

@@ -16,6 +16,9 @@ N = 1000
 K = 4
 
 SEED = 42
+# BER or GAUSS
+MODE = "GAUSS"
+# MODE = "BER"
 
 epsilon = 0.1
 tau = 0.1
@@ -86,6 +89,8 @@ def altmain():
     optimal_records = [np.zeros(N) for _ in range(len(algorithms))]
     # repetitions of experiment
     for rep in range(N):
+        for bandit in bandits:
+            bandit.reset()
         for alg in algorithms:
             alg.reset()
         run_models(bandits, algorithms)
