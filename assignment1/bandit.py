@@ -6,7 +6,7 @@ import numpy as np
 
 ## Distributions charachteristics intervals
 MU = (1,2)
-SIGMA = (4,5)
+SIGMA = (3,5)
 
 
 class Bandit(object):
