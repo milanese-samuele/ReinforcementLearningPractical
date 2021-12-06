@@ -58,6 +58,10 @@ class Softmax:
         if(idx == best):
             self.bestcount[step] = 1
 
+    def update_bernoulli_count(self, step, reward):
+        if (reward == 1):
+            self.bestcount[step] = 1
+
     def update_step(self, idx):
         self.reward[idx] = self.mean_reward
 

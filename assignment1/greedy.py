@@ -29,6 +29,10 @@ class Greedy(object):
         if(idx == best):
             self.bestcount[step] = 1
 
+    def update_bernoulli_count(self, step, reward):
+        if (reward == 1):
+            self.bestcount[step] = 1
+
     def choose_bandit(self):
         return np.argmax(self.k_reward)
 

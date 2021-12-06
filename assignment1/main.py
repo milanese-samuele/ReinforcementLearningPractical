@@ -13,12 +13,12 @@ from ActionPreference import *
 
 ## PARAMETERs FOR EXPERIMENT
 N = 1000
-K = 5
+K = 3
 
 SEED = 42
 # BER or GAUSS
-# MODE = "GAUSS"
-MODE = "BER"
+MODE = "GAUSS"
+# MODE = "BER"
 
 epsilon = 0.1
 tau = 0.9
@@ -66,7 +66,10 @@ def run_models(bandits, algorithms):
         best_bidx = np.argmax(rewards)
         for alg in algorithms:
             choice = alg.choose_bandit()
-            alg.update_best_count(i, choice, best_bidx)
+            if (MODE == "BER"):
+                alg.update_bernoulli_count(i, rewards[choice])
+            else:
+                alg.update_best_count(i, choice, best_bidx)
             alg.update_results(choice, rewards[choice])
             alg.update_step(i)
 
