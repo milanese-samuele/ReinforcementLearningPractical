@@ -10,12 +10,12 @@ from ActionPreference import *
 
 ## PARAMETERs FOR EXPERIMENT
 N = 1000
-K = 3
+K = 5
 
 SEED = 42
 # BER or GAUSS
-MODE = "GAUSS"
-# MODE = "BER"
+# MODE = "GAUSS"
+MODE = "BER"
 
 epsilon = 0.1
 tau = 0.9
