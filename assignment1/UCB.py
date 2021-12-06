@@ -13,7 +13,6 @@ class UCB():
         self.mean_reward = 0
         self.reward = np.zeros(iters)
         self.iters = iters
-        self.max_upper_bound = 0
         self.sum_reward = np.zeros(k)
         self.n = 0
 
