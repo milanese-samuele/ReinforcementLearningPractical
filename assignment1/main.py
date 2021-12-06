@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 
 from bandit import *
-from agent import *
 from greedy import *
-import random
 import matplotlib.pyplot as plt
-import numpy as np
 from SoftMax import *
 from UCB import *
 from ActionPreference import *

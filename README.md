@@ -11,3 +11,5 @@ The last part is the different types of algorithms. As one can see there are fou
 * Softmax: This file contains the class for the SoftMax algorithm
 * Action_Preferences: This file contains the class for the Action Preferences algorithm
 
+Note that the running time of the algorithm can be around 60 seconds (also differs on the parameters, 60 second is with default) 
+
