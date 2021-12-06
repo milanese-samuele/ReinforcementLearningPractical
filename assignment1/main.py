@@ -17,8 +17,8 @@ K = 5
 
 SEED = 42
 # BER or GAUSS
-MODE = "GAUSS"
-# MODE = "BER"
+# MODE = "GAUSS"
+MODE = "BER"
 
 epsilon = 0.1
 tau = 0.9
@@ -37,44 +37,32 @@ ALGOS = [
 
 def plotResults(results, optimals):
     plt.figure(figsize=(11,9))
-    fig, ax = plt.subplots(1,2)
+    plt.subplot(1,2,1)
     for i, p in enumerate(results):
-        ax[0].plot(p, label=ALGOS[i].label)
-    for i, p in enumerate(optimals):
-        ax[1].plot(p, label=ALGOS[i].label)
+        plt.plot(p, label=ALGOS[i].label)
     plt.legend()
     plt.xlabel("Iterations")
     plt.ylabel("Average Reward")
     plt.title("Rewards after " + str(N)
               + " iterations")
+    plt.subplot(1,2,2)
+    for i, p in enumerate(optimals):
+        plt.plot(p, label=ALGOS[i].label)
+    plt.legend()
+    plt.xlabel("Iterations")
+    plt.ylabel("Average solution %")
+    plt.title("Optimal solution % per each step")
     plt.show()
 
-
-def main():
-
-    bandits = [Bandit(random.random() * SEED+idx) for idx in range(K)]
-    a = RandomAgent(bandits)
-    eps_rewards = np.zeros(N)
-    Greed_rewards = np.zeros(N)
-    for idx in range(N):
-        # print(a.act())
-
-        # For Greedy
-        greed = GreedyAgent(K, N)
-        greed.run()
-        Greed_rewards = Greed_rewards + (greed.reward - Greed_rewards) / (idx + 1)
-
-        # For Epsilon greedy
-        eps = EpsylonGreedyAgent(K, epsilon, N)
-        eps.run()
-        eps_rewards = eps_rewards + (eps.reward - eps_rewards) / (idx + 1)
-    # Plot the results
-    plotResults(eps_rewards, Greed_rewards)
-
+def get_rewards(bandits):
+    if (MODE=="GAUSS"):
+        return [bandits[idx].get_reward() for idx in range(K)]
+    else :
+        return [bandits[idx].get_reward_bernoulli() for idx in range(K)]
 
 def run_models(bandits, algorithms):
     for i in range(N):
-        rewards = [bandits[idx].get_reward() for idx in range(K)]
+        rewards = get_rewards(bandits)
         best_bidx = np.argmax(rewards)
         for alg in algorithms:
             choice = alg.choose_bandit()
@@ -82,7 +70,7 @@ def run_models(bandits, algorithms):
             alg.update_results(choice, rewards[choice])
             alg.update_step(i)
 
-def altmain():
+def main():
     bandits = [Bandit(idx) for idx in range(K)]
     algorithms = ALGOS
     reward_records = [np.zeros(N) for _ in range(len(algorithms))]
@@ -102,4 +90,4 @@ def altmain():
 
 
 if __name__ == '__main__':
-    altmain()
+    main()
