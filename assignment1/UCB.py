@@ -17,6 +17,7 @@ class UCB():
         self.sum_reward = np.zeros(k)
         self.n = 0
 
+    """""
     def _choose_bandit(self):
         for i in range(1, self.iters + 1):
             max_upper_bound = 0
@@ -31,7 +32,7 @@ class UCB():
                     max_upper_bound = upper_bound
                     choice = idx
         return choice
-
+    """""
 
     def _compute_uncertainty(self, idx):
         if (self.k_n[idx] > 0):
