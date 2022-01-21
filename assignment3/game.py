@@ -9,17 +9,13 @@ class Game:
     
     ## display spots on the board that have not been marked yet
     def available_moves(self):
-        return np.asarray([x for x in self.board.ravel() if x == 0])
-        # return np.argwhere(self.board == 0)
+        moves = []
+        for rows in range(self.dim):
+            for columns in range(self.dim):
+                if self.board[rows, columns] == 0:
+                    moves.append((rows, columns))
+        return moves
 
-
-    ## main game loop 
-    def play(self, players):
-
-        next_player = 0
-        while (not self.game_is_over()):
-            self.board[players[next_player%2].make_move(available_moves())] = 1 if next_player%2 == 0 else 2
-            next_player += 1
 
     def winner(self):
 
@@ -30,27 +26,58 @@ class Game:
             for columns in range(self.dim):
                 sum += self.board[rows,columns]
             if abs(sum) == self.dim:
-                return #something
-            else:
-                sum = 0
+                return 0 if sum < 0 else 1
+            sum = 0
 
         # vertical check
         sum = 0
         for rows in range(self.dim):
             for columns in range(self.dim):
-                sum += self.board[rows, columns]
+                sum += self.board[columns, rows]
             if abs(sum) == self.dim:
-                return #something
+                return 0 if sum < 0 else 1
             else:
                 sum = 0
 
         # diagonal check
-        if np.trace(self.board) == self.dim or np.trace(np.fliplr(self.board)) == self.dim:
-            return # somehting
+        sum = 0
+        sum = np.trace(self.board)
+        if abs(sum) == self.dim:
+            return 0 if sum < 0 else 1
+        sum = np.trace(np.fliplr(self.board))
+        if abs(sum) == self.dim:
+            return 0 if sum < 0 else 1
+
+        return False
 
 
     def end_of_the_game(self):
-        if not np.argwhere(self.board == 0):
+        if len(self.available_moves()) == 0:
             return True
         else:
             return False
+
+    ## main game loop 
+    def play(self, players):
+
+
+
+        print("statrt game")
+        while (not self.end_of_the_game()):
+
+            print("====================================")
+            for _, p in enumerate(players):
+                print(self.available_moves())
+                p.current_state = str(self.available_moves())
+                x, y = p.make_move(self.available_moves())
+                self.board[x, y] = -1 if _ == 0 else 1
+            w = self.winner() # index of the tuple 0 or 1
+            for p in players:
+                p.update(str(self.available_moves()), 0)
+            print(w)
+            print(self.board)
+            if (w is not False): # if theres a winner
+                players[w].update(str(self.available_moves()), 100)
+                players[abs(w - 1)].update(str(self.available_moves()), -100)
+                print("winner is :", w)
+                break
