@@ -2,21 +2,24 @@
 import numpy as np
 from game import Game
 from agent import *
-import matplotlibpy.pyplot as plt
+import matplotlib.pyplot as plt
 
 def main():
-    g = Game(10)
-    players = [randomAgent(), QAgent(0.5, 0.9)]
+    g = Game(3)
+    players = [QAgent(0.5, 0.9), randomAgent()]
     winners = []
     reps = 100
     epochs = 1000
-    wins = 0
     ratios = list()
     for e in range(epochs):
+        wins = 0
         for i in range(reps):
-            wins += g.play(players)
+            result = g.play(players)
+            if result is not None:
+                wins += result
         ratios.append(wins/reps)
-    
+
+    print(ratios)
     plt.plot(ratios)
     plt.show()
     
