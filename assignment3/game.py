@@ -67,7 +67,7 @@ class Game:
 
             print("====================================")
             for _, p in enumerate(players):
-                print(self.available_moves())
+                p.show_table()
                 p.current_state = str(self.available_moves())
                 x, y = p.make_move(self.available_moves())
                 self.board[x, y] = -1 if _ == 0 else 1
