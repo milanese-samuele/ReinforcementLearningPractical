@@ -60,24 +60,23 @@ class Game:
     ## main game loop 
     def play(self, players):
 
+        self.board = np.zeros((self.dim,self.dim),dtype='int')
 
-
-        print("statrt game")
         while (not self.end_of_the_game()):
 
-            print("====================================")
             for _, p in enumerate(players):
-                p.show_table()
+                if (self.end_of_the_game()):
+                    break
                 p.current_state = str(self.available_moves())
                 x, y = p.make_move(self.available_moves())
                 self.board[x, y] = -1 if _ == 0 else 1
             w = self.winner() # index of the tuple 0 or 1
             for p in players:
                 p.update(str(self.available_moves()), 0)
-            print(w)
-            print(self.board)
             if (w is not False): # if theres a winner
                 players[w].update(str(self.available_moves()), 100)
                 players[abs(w - 1)].update(str(self.available_moves()), -100)
-                print("winner is :", w)
-                break
+                return w
+
+        
+        
