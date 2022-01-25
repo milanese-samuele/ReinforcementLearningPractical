@@ -62,6 +62,8 @@ class Game:
 
         self.board = np.zeros((self.dim,self.dim),dtype='int')
 
+        w = False
+
         while (not self.end_of_the_game()):
 
             for _, p in enumerate(players):
@@ -76,7 +78,21 @@ class Game:
             if (w is not False): # if theres a winner
                 players[w].update(str(self.available_moves()), 100)
                 players[abs(w - 1)].update(str(self.available_moves()), -100)
-                return w
+
+                players[w].update_stats(1)
+                players[abs(w - 1)].update_stats(0)
+                break
+        
+        if (w is False):
+            for p in players:
+                p.update_stats(0)
+            return 1 # drawn
+        else :
+            return 0 # no draw
+            
+
+
+        
 
         
         
