@@ -82,7 +82,9 @@ def experiment(players, reps = 500, epochs = 100, dim = 3):
     return winratios, drawsavg
 
 def main():
-    all_vs_control()
+    players = [epsilonQAgent(1.0, 0.6, 1), greedyQAgent(1.0, 0.6)]
+    wins, draws = experiment(players, reps=1000, epochs=175)
+    plots(players, wins, draws)
 
 if __name__ == "__main__" :
     main()
