@@ -24,5 +24,6 @@ This code was implemented for obtaining data from some experiments on reinforcem
 Note that running the algorithms will take some time.
 
 ### example
-`$ python python ./tictactoe.py ALLVSALL`
-`$ python python ./tictactoe.py CONTROL`
+`$ python ./tictactoe.py ALLVSALL`
+
+`$ python ./tictactoe.py CONTROL`
