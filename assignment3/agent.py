@@ -37,10 +37,14 @@ class greedyQAgent:
     def reset(self):
         self.__init__(self.alpha, self.gamma)
 
+    # function called from the game framework that advances the state
+    # of the agent
     def make_move(self, available_moves):
         self.last_action = self.get_best_move(available_moves)
         return self.last_action
 
+    # select best action in Qtable for a given set of available moves 
+    # at a certain time in the game.
     def get_best_move(self, available_moves):
         state = str(available_moves)
         if state in self.qtable.keys():
@@ -51,6 +55,8 @@ class greedyQAgent:
                 if v > best_value:
                     best_action = a
                     best_value = v
+        # if the state was never encountered before, it created a new row 
+        # in the qtable for it
         else:
             best_action = secrets.choice(available_moves)
             self.qtable[state] = {}
@@ -58,6 +64,8 @@ class greedyQAgent:
                 self.qtable[state][a] = 0.0
         return best_action
         
+    # the lookahead step as required by the qlearning formula to compute
+    # Q(s_1, a)
     def lookahed_step(self, new_state):
         if new_state in self.qtable.keys():
             actions = self.qtable[new_state]
@@ -71,13 +79,16 @@ class greedyQAgent:
         else:
             return 0.0
 
+    # updates the table according to the formula
     def update(self, new_state, reward):
         best_new_action = self.lookahed_step(new_state)
         self.qtable[self.current_state][self.last_action] = self.qtable[self.current_state][self.last_action] + self.alpha * (reward + self.gamma* best_new_action - self.qtable[self.current_state][self.last_action])
         
+    # service function that will print out the qtable stored by the agent
     def show_table(self):
         print(self.qtable)
-
+    
+    # updates the win counter of the agent
     def update_stats(self, result):
         self.wincounter = np.append(self.wincounter, result)
 

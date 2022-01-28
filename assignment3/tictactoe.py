@@ -5,23 +5,15 @@ from random import shuffle
 from agent import *
 import matplotlib.pyplot as plt
 
-EPS = epsilonQAgent(0.5, 0.9, 0.1)
-UCB = UCBQAgent(0.5, 0.9, 3)
-GRD = greedyQAgent(0.5, 0.9)
-OPT = optimalQAgent(0.5, 0.9)
-RND = randomAgent()
-
-firstplayer = EPS
-secondplayer = RND
-
+# function used for plotting results from experiments
 def plots(players, winratios, drawsavg):
-
     plt.plot(winratios[players[0].name], label=players[0].name)
     plt.plot(winratios[players[1].name], label = players[1].name)
     plt.plot(drawsavg, label = "draws")
     plt.legend()
     plt.show()
 
+# setting of the experiment that runs each type of agent against each other
 def all_vs_all():
     players = [epsilonQAgent(1, 0.6, 0.1),
                 UCBQAgent(1, 0.6, 4),
@@ -32,7 +24,7 @@ def all_vs_all():
         for jdx, o in enumerate(players):
             if (idx == jdx):
                 continue
-            wins, draws = experiment([a, o], reps=1500, epochs=175)    
+            wins, draws = experiment([a, o], reps=15, epochs=1)    
             plt.plot(wins[a.name], label=a.name)
             plt.plot(wins[o.name], label=o.name)
             plt.plot(draws, label="draws")
@@ -45,6 +37,8 @@ def all_vs_all():
     
     
 
+# setting of the experiment that runs each type of agent against the control
+# random agent
 def all_vs_control():
     
     players = [epsilonQAgent(1, 0.6, 0.1),
@@ -55,7 +49,7 @@ def all_vs_control():
     control = randomAgent()
 
     for a in players:
-        wins, draws = experiment([a, control], reps=1500, epochs=175)    
+        wins, draws = experiment([a, control], reps=15, epochs=1)    
         plt.plot(wins[a.name], label=a.name)
     plt.title("Exploration methods against Control Group (Random)")
     plt.xlabel("epochs")
@@ -63,6 +57,7 @@ def all_vs_control():
     plt.legend()
     plt.show()
 
+# function used to find the best hyper-parameters
 def hp_tuning():
 
     alphas = [0.2, 0.4, 0.5, 0.6, 0.8, 1.0]
@@ -79,7 +74,8 @@ def hp_tuning():
         wins, draws = experiment([agent, control], reps=100, epochs=150)
         print(agent.alpha, agent.gamma, ": ", np.average(wins[agent.name]), np.average(draws))
     
-
+## core function that runs an experiment given two players, a number of repetitions
+# epochs and the dimension of the grid
 def experiment(players, reps = 500, epochs = 100, dim = 3):
 
     g = Game(dim)
@@ -109,6 +105,7 @@ def main():
     # wins, draws = experiment(players, reps=1000, epochs=175)
     # plots(players, wins, draws)
     all_vs_all()
+    all_vs_control()
 
 if __name__ == "__main__" :
     main()
