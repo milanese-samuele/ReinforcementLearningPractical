@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
+import sys
 from game import Game
 from random import shuffle
 from agent import *
@@ -24,7 +25,7 @@ def all_vs_all():
         for jdx, o in enumerate(players):
             if (idx == jdx):
                 continue
-            wins, draws = experiment([a, o], reps=15, epochs=1)    
+            wins, draws = experiment([a, o], reps=1500, epochs=175)    
             plt.plot(wins[a.name], label=a.name)
             plt.plot(wins[o.name], label=o.name)
             plt.plot(draws, label="draws")
@@ -49,7 +50,7 @@ def all_vs_control():
     control = randomAgent()
 
     for a in players:
-        wins, draws = experiment([a, control], reps=15, epochs=1)    
+        wins, draws = experiment([a, control], reps=1500, epochs=175)    
         plt.plot(wins[a.name], label=a.name)
     plt.title("Exploration methods against Control Group (Random)")
     plt.xlabel("epochs")
@@ -104,8 +105,12 @@ def main():
     # players = [epsilonQAgent(1.0, 0.6, 1), greedyQAgent(1.0, 0.6)]
     # wins, draws = experiment(players, reps=1000, epochs=175)
     # plots(players, wins, draws)
-    all_vs_all()
-    all_vs_control()
+    if (sys.argv[1] == "ALLVSALL") :
+        all_vs_all()
+    elif (sys.argv[1] == "CONTROL") :
+        all_vs_control()
+    else :
+        print ("wrong input, try again!")
 
 if __name__ == "__main__" :
     main()
