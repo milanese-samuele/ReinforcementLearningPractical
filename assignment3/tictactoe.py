@@ -22,6 +22,29 @@ def plots(players, winratios, drawsavg):
     plt.legend()
     plt.show()
 
+def all_vs_all():
+    players = [epsilonQAgent(1, 0.6, 0.1),
+                UCBQAgent(1, 0.6, 4),
+                greedyQAgent(1, 0.6),
+                optimalQAgent(0.4, 0.5)]
+
+    for idx, a in enumerate(players):
+        for jdx, o in enumerate(players):
+            if (idx == jdx):
+                continue
+            wins, draws = experiment([a, o], reps=1500, epochs=175)    
+            plt.plot(wins[a.name], label=a.name)
+            plt.plot(wins[o.name], label=o.name)
+            plt.plot(draws, label="draws")
+            title = a.name + " against " + o.name
+            plt.title(title)
+            plt.xlabel("epochs")
+            plt.ylabel("wins/games")
+            plt.legend()
+            plt.show()
+    
+    
+
 def all_vs_control():
     
     players = [epsilonQAgent(1, 0.6, 0.1),
@@ -82,9 +105,10 @@ def experiment(players, reps = 500, epochs = 100, dim = 3):
     return winratios, drawsavg
 
 def main():
-    players = [epsilonQAgent(1.0, 0.6, 1), greedyQAgent(1.0, 0.6)]
-    wins, draws = experiment(players, reps=1000, epochs=175)
-    plots(players, wins, draws)
+    # players = [epsilonQAgent(1.0, 0.6, 1), greedyQAgent(1.0, 0.6)]
+    # wins, draws = experiment(players, reps=1000, epochs=175)
+    # plots(players, wins, draws)
+    all_vs_all()
 
 if __name__ == "__main__" :
     main()
